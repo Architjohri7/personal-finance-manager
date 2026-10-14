@@ -167,6 +167,16 @@ Yearly report: `/api/reports/yearly/2026`
 
 ## Testing
 
+### Code Coverage Report
+
+The JaCoCo report below shows instruction and branch coverage for the `ApiController` class.
+
+<img width="1016" height="156" alt="Screenshot 2026-10-14 at 9 41 50 PM" src="https://github.com/user-attachments/assets/7f7fea80-00fc-40dc-90d4-b6604d5bc38c" />
+
+<img width="1480" height="882" alt="Screenshot 2026-10-14 at 9 42 16 PM" src="https://github.com/user-attachments/assets/baf541b8-2a00-458c-8bea-f22cc0e9262c" />
+
+
+
 The project has automated unit and integration tests covering its API functionality, validation, and error handling.
 
 The latest local verification run completed with 57 tests, 0 failures, and 0 errors. JaCoCo reported approximately 92% instruction coverage and 89% branch coverage.
