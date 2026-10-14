@@ -1,40 +1,180 @@
 # Personal Finance Manager API
 
-A Spring Boot REST API for personal finance tracking, built with Java 21, Spring Boot 3.5, Spring Security, Spring Data JPA and H2.
+A Spring Boot REST API for personal finance management, built using Java 21, Spring Boot 3.5, Spring Security, Spring Data JPA, and H2.
 
 ## Features
-- Email/password registration and login using server-side sessions and cookies
-- User-specific transactions, custom categories, and savings goals
-- Monthly and yearly income/expense reports
-- Request validation and JSON error responses
-- H2 file database for local persistence
 
-## Run locally
-Prerequisites: JDK 21 and Maven (or use the included Maven Wrapper if provided by your IDE/project).
+- User registration, login, and logout using session-based authentication.
+- User-specific transactions and transaction filtering.
+- Default and custom income/expense categories.
+- Savings goals with progress tracking.
+- Monthly and yearly income and expense reports.
+- Request validation and JSON error responses.
+- H2 database for local persistence.
+- Automated unit and integration tests.
+
+## Tech Stack
+
+- **Language:** Java 21
+- **Framework:** Spring Boot 3.5
+- **Security:** Spring Security, session-based authentication
+- **Database:** H2
+- **Persistence:** Spring Data JPA
+- **Build Tool:** Maven
+
+## Run Locally
+
+### Prerequisites
+
+- JDK 21
+- Git
+
+### Steps
+
+Clone the repository:
+
+```bash
+git clone https://github.com/Architjohri7/personal-finance-manager.git
+cd personal-finance-manager
+```
+
+Run the application:
 
 ```bash
 ./mvnw spring-boot:run
 ```
-If the wrapper is not present, use `mvn spring-boot:run`.
 
-Health check: `GET http://localhost:8080/api/health`
+The API runs at:
 
-## API quick start
-All endpoints except health, registration and login require a session cookie.
+`http://localhost:8080`
 
-1. `POST /api/auth/register` JSON: `{"username":"you@example.com","password":"password123","fullName":"Your Name","phoneNumber":"+911234567890"}`
-2. `POST /api/auth/login` JSON: `{"username":"you@example.com","password":"password123"}`. Save/send the returned `JSESSIONID` cookie on later requests.
-3. `GET /api/categories`
-4. `POST /api/transactions` JSON: `{"amount":250.00,"date":"2026-10-12","category":"Food","description":"Lunch"}`
-5. `GET /api/transactions`, optionally with `startDate`, `endDate`, `categoryId`, and `type=INCOME|EXPENSE`
-6. `POST /api/goals` JSON: `{"goalName":"Emergency Fund","targetAmount":5000,"targetDate":"2027-12-31"}`
-7. `GET /api/reports/monthly/2026/10` or `GET /api/reports/yearly/2026`
-8. `POST /api/auth/logout`
+### Health Check
 
-Custom category JSON: `{"name":"Freelance","type":"INCOME"}`. Goal updates accept `targetAmount` and `targetDate`.
+Send a GET request to:
 
-## Important notes before submission
-- This ZIP is a starting implementation and has not been validated against the assignment's external 86-test script or deployed to a public URL.
-- Run the app and exercise all endpoints locally; add comprehensive unit/integration tests and verify the required coverage target before submitting.
-- The assignment also asks for a public GitHub repository, a live deployment URL, and a screenshot of the external test report. Those steps must be completed separately.
-- The H2 console is enabled for local development only. Disable it before a public production deployment and configure a persistent production database.
+`http://localhost:8080/api/health`
+
+### Run Tests
+
+Run the automated test suite:
+
+```bash
+./mvnw clean verify
+```
+
+The latest local test run completed successfully with **57 tests and 0 failures**.
+
+## Deployment
+
+The application is deployed on Render.
+
+**Live Health Endpoint:**  
+https://personal-finance-manager-u1e8.onrender.com/api/health
+
+## API Endpoints
+
+All endpoints except the health check, registration, and login require an authenticated session.
+
+| Method | Endpoint | Purpose |
+|---|---|---|
+| GET | `/api/health` | Check API health |
+| POST | `/api/auth/register` | Register a user |
+| POST | `/api/auth/login` | Log in |
+| POST | `/api/auth/logout` | Log out |
+| GET | `/api/categories` | List categories |
+| POST | `/api/categories` | Create a custom category |
+| DELETE | `/api/categories/{id}` | Delete a category |
+| POST | `/api/transactions` | Create a transaction |
+| GET | `/api/transactions` | List and filter transactions |
+| PUT | `/api/transactions/{id}` | Update a transaction |
+| DELETE | `/api/transactions/{id}` | Delete a transaction |
+| POST | `/api/goals` | Create a savings goal |
+| GET | `/api/goals` | List savings goals |
+| GET | `/api/reports/monthly/{year}/{month}` | Generate a monthly report |
+| GET | `/api/reports/yearly/{year}` | Generate a yearly report |
+
+## Example Requests
+
+### Register
+
+`POST /api/auth/register`
+
+```json
+{
+  "username": "you@example.com",
+  "password": "password123",
+  "fullName": "Your Name",
+  "phoneNumber": "+911234567890"
+}
+```
+
+### Log In
+
+`POST /api/auth/login`
+
+```json
+{
+  "username": "you@example.com",
+  "password": "password123"
+}
+```
+
+Save the session cookie returned after login and include it in subsequent authenticated requests.
+
+### Create a Transaction
+
+`POST /api/transactions`
+
+```json
+{
+  "amount": 250.00,
+  "date": "2026-10-12",
+  "category": "Food",
+  "description": "Lunch"
+}
+```
+
+Transaction listing supports optional filters such as `startDate`, `endDate`, `categoryId`, and `type`.
+
+### Create a Custom Category
+
+`POST /api/categories`
+
+```json
+{
+  "name": "Freelance",
+  "type": "INCOME"
+}
+```
+
+### Create a Savings Goal
+
+`POST /api/goals`
+
+```json
+{
+  "goalName": "Emergency Fund",
+  "targetAmount": 5000,
+  "targetDate": "2027-12-31"
+}
+```
+
+### Reports
+
+Monthly report: `/api/reports/monthly/2026/10`
+
+Yearly report: `/api/reports/yearly/2026`
+
+## Testing
+
+The project has automated unit and integration tests covering its API functionality, validation, and error handling.
+
+The latest local verification run completed with 57 tests, 0 failures, and 0 errors. JaCoCo reported approximately 92% instruction coverage and 89% branch coverage.
+
+**Note:** These are local test results. They do not represent the result of the assignment's separate external 86-test script.
+
+## Database and Deployment Notes
+
+The H2 file database is configured for local persistence. Database persistence on the deployed service depends on its production configuration and storage setup.
+
+The H2 console should remain disabled in production. Production deployments should use appropriately configured persistent storage and secure environment-specific settings.
